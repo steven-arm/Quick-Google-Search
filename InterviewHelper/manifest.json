@@ -1,4 +1,5 @@
 {
+  "manifest_version": 1,
   "name": "InterviewHelper",
   "version": "0.1.0",
   "description": "My Chrome Extension",
