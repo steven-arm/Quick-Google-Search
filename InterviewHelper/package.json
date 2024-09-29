@@ -7,5 +7,16 @@
     "watch": "node ./node_modules/webpack/bin/webpack.js --mode=development --watch --config config/webpack.config.js",
     "build": "node ./node_modules/webpack/bin/webpack.js --mode=production --config config/webpack.config.js"
   },
-  "permissions": ["scripting", "activeTab"]
+  "permissions": ["scripting", "activeTab"],
+  "commands": {
+    "test_command":{
+      "suggested_key": {
+        "default": "Ctrl+Shift+Z"
+      },
+      "description": "Test Website Opening"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
 }
