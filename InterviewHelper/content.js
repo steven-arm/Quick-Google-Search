@@ -50,7 +50,8 @@ recognition.onresult = (event) => {
     const transcript = event.results[event.results.length - 1][0].transcript;
 
     if (transcript.toLowerCase().includes("correct")){
-        let searchString = transcript.replace(" ", "+");
+        let searchString = transcript.replace("+", "plus");
+        searchString = searchString.replace(" ", "+");
         searchString = searchString.replace("correct", "");
         var newUrl = "https://www.google.com/search?q=" + searchString;
         //chrome.windows.create({url: newUrl});
