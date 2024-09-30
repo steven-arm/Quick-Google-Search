@@ -1,3 +1,4 @@
+// set up speech recognition
 if (!('webkitSpeechRecognition' in window)) {
     upgrade();
 } else {
@@ -9,58 +10,41 @@ if (!('webkitSpeechRecognition' in window)) {
     recognition.continuous = true;
 }
 
-function insertTextAtCursor(text) {
-    const el = document.activeElement;
-    const tagName = el.tagName.toLowerCase();
-
-    if (tagName === "input" || tagName === "textarea") {
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
-        const value = el.value;
-
-        el.value = value.slice(0, start) + text + value.slice(end);
-        el.selectionStart = el.selectionEnd = start + text.length;
-    } else if (
-        tagName === "div" &&
-        el.getAttribute("contenteditable") === "true"
-    ) {
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-
-        range.deleteContents();
-        const textNode = document.createTextNode(text);
-        range.insertNode(textNode);
-        range.setStartAfter(textNode);
-        range.setEndAfter(textNode);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-    const inputEvent = new Event("input", { bubbles: true, cancelable: true });
-    el.dispatchEvent(inputEvent);
-    const changeEvent = new Event("change", {
-        bubbles: true,
-        cancelable: true,
-    });
-    el.dispatchEvent(changeEvent);
+//made this async for error checking, may not be necessary
+async function runSearchData(url) {
+    console.log(typeof url);
+    console.log(url);
+    chrome.runtime.sendMessage({action: "openWindow", url: url});
 }
 
+// runs every word
 recognition.onresult = (event) => {
     console.log("Recognized Speech");
 
     const transcript = event.results[event.results.length - 1][0].transcript;
 
-    if (transcript.toLowerCase().includes("correct")){
-        let searchString = transcript.replace("+", "plus");
-        searchString = searchString.replace(" ", "+");
-        searchString = searchString.replace("correct", "");
-        var newUrl = "https://www.google.com/search?q=" + searchString;
-        //chrome.windows.create({url: newUrl});
-        open(newUrl);
-
+    // end phrase
+    if (transcript.toLowerCase().includes("mistaken")){
+        // create a google query minus end word
         toggleRecognition();
-
+        setTimeout(() => {
+            chrome.runtime.sendMessage({action: "closeWindow"});
+        }, 1000);
         return;
     }
+
+    //search word
+    if (transcript.toLowerCase().includes("correct")){
+        transcript.replace("correct", "");
+        // create a google query minus end word
+        //toggleRecognition();
+        var searchString = transcript.replace("correct", "").trim();
+        var newUrl = "https://www.google.com/search?q=" + encodeURIComponent(searchString);
+        runSearchData(newUrl);
+        return;
+    }
+
+    
 
 };
 
@@ -72,12 +56,17 @@ recognition.onend = () => {
     }
 };
 
+// message listener -> received from service_worker usually
 chrome.runtime.onMessage.addListener(function(request){
     if (request.message === "toggleRecognition") {
         toggleRecognition();
     }
+    if (request.message === "getAnswer"){
+        //getAnswer();
+    }
 });
 
+// basic toggle
 function toggleRecognition() {
     if (!recognition.manualStop) {
         recognition.manualStop = true;
@@ -87,3 +76,26 @@ function toggleRecognition() {
         recognition.start();
     }
 }
+
+// strip google page for answer using known css guidelines to get first emphasized text
+function getAnswer(){
+    const featured = getFeaturedText();
+    if(featured) return featured;
+
+    const em = document.querySelector("#rs em");
+    const content = em.textContent;
+    
+    return content;
+}
+
+// get text in the featured field (preferred answer)
+const getFeaturedText = () => {
+    const h2s = document.getElementsByTagName('h2');
+    for(let h2 of h2s){
+      if(h2.innerText === 'Featured snippet from the web'){
+          const parent = h2.closest('.MjjYud');
+          return parent.querySelector('b').textContent;
+      }
+    }
+    return undefined;
+  }

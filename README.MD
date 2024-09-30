@@ -5,6 +5,10 @@ A small Chrome extension that opens tabs based on recently asked questions.
 
 Basically speech to text Google search.
 
+## Disclaimer
+* I do not endorse use of this tool during an interview as it is cheating
+* I do not use this tool during interviews, it was just a fun experiment
+
 ## Installation
 1. Download or clone this repo
 2. Open chrome extensions
@@ -19,5 +23,5 @@ Basically speech to text Google search.
 
 ## Limitations
 * You sound like a robot when you ask for the "confirmation"
-* If you need to cheat in a Job Interview, are you really skilled enough to get the job
+* If you need to cheat in a Job Interview, are you really skilled enough to get the job?
 * Requires a key press, might change it to be automatic
