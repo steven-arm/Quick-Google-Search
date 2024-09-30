@@ -3,7 +3,8 @@
   "name": "InterviewHelper",
   "version": "0.1.0",
   "description": "My Chrome Extension",
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "tabs", "tabCapture", "windows"],
+  "host_permissions": ["<all_urls>"],
   "commands": {
     "test_command":{
       "suggested_key": {
@@ -12,13 +13,16 @@
       "description": "Test Website Opening"
     }
   },
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts":[
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "externally_connectable": {
+    "matches": ["<all_urls>"]
+  }
 }

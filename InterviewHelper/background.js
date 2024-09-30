@@ -3,11 +3,14 @@ async function open_website() {
     chrome.windows.create({url: newUrl});
 }
 async function start_listening() {
-    const [activeTab] = await chrome.tabs.query ({active: true, currentWindow: true});
-    chrome.tabs.sendMessage(activeTab.id, {command:"toggleRecognition"});
+    await chrome.tabs.query ({active: true, currentWindow: true}, function(tabs){
+        let activeTab = tabs[0];
+
+        chrome.tabs.sendMessage(activeTab.id, {message:"toggleRecognition"});
+    });
 }
 chrome.commands.onCommand.addListener((command) =>{
     if (command === "test_command") {
-        open_website();
+        start_listening();
     }
 });
