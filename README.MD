@@ -3,7 +3,7 @@
 
 A small Chrome extension that opens tabs based on recently asked questions.
 
-Listens to active tab and opens a new Chrome tab when a question is asked.
+Basically speech to text Google search.
 
 ## Installation
 1. Download or clone this repo
