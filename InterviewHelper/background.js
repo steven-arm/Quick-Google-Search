@@ -4,6 +4,7 @@ async function open_website() {
 }
 async function start_listening() {
     const [activeTab] = await chrome.tabs.query ({active: true, currentWindow: true});
+    chrome.tabs.sendMessage(activeTab.id, {command:"toggleRecognition"});
 }
 chrome.commands.onCommand.addListener((command) =>{
     if (command === "test_command") {
