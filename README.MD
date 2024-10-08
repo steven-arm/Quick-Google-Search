@@ -1,5 +1,5 @@
 
-# Interview Helper
+# Quick Google Search
 
 A small Chrome extension that opens tabs based on recently asked questions.
 
@@ -16,12 +16,12 @@ Basically speech to text Google search.
 4. Click "Load unpacked" button and select the local directory with this repo
 
 ## How to Use
-1. Press Ctrl + Shift + Z on an active, Mic Enabled page
+1. Press Ctrl + Shift + Z on an active, Mic Enabled webpage
 2. Say your search query
 3. Say "correct" to end the search query automatically
 4. Wait for the tab to pop up with relevant information
+5. Once you are done with the information, say "mistaken" to close the tab and stop listening
 
 ## Limitations
 * You sound like a robot when you ask for the "confirmation"
-* If you need to cheat in a Job Interview, are you really skilled enough to get the job?
 * Requires a key press, might change it to be automatic
